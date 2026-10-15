@@ -127,6 +127,7 @@
                     <img src="{{ $yagya->image_url }}" alt="{{ $yagya->title }}" class="group-hover:scale-105 transition-transform duration-500">
                     <span class="service-category-badge">
                         {{ $yagya->category->name ?? 'Sacred Yagya' }}
+                        @if($yagya->subcategory) • {{ $yagya->subcategory->name }} @endif
                     </span>
                 </div>
                 <div class="service-card-body flex flex-col justify-between">

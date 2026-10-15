@@ -23,8 +23,8 @@ class ServiceController extends Controller
 
     public function create()
     {
-        $categories = Category::all();
-        $subcategories = Subcategory::all();
+        $categories = Category::orderBy('type')->orderBy('order_index')->get();
+        $subcategories = Subcategory::with('category')->orderBy('order_index')->get();
         $service = new Service();
         return view('admin.services.form', compact('service', 'categories', 'subcategories'));
     }
@@ -76,6 +76,16 @@ class ServiceController extends Controller
             $validated['benefits'] = [];
         }
 
+        // Ensure subcategory belongs to selected category
+        if (!empty($validated['subcategory_id'])) {
+            $validSub = Subcategory::where('id', $validated['subcategory_id'])
+                ->where('category_id', $validated['category_id'])
+                ->exists();
+            if (!$validSub) {
+                $validated['subcategory_id'] = null;
+            }
+        }
+
         Service::create($validated);
 
         return redirect()->route('admin.services.index')->with('success', 'Vedic Service/Yagya created successfully.');
@@ -83,8 +93,8 @@ class ServiceController extends Controller
 
     public function edit(Service $service)
     {
-        $categories = Category::all();
-        $subcategories = Subcategory::where('category_id', $service->category_id)->get();
+        $categories = Category::orderBy('type')->orderBy('order_index')->get();
+        $subcategories = Subcategory::with('category')->orderBy('order_index')->get();
         return view('admin.services.form', compact('service', 'categories', 'subcategories'));
     }
 
@@ -130,6 +140,16 @@ class ServiceController extends Controller
             $validated['benefits'] = array_values(array_filter(array_map('trim', explode("\n", $request->benefits_text))));
         } else {
             $validated['benefits'] = $service->benefits;
+        }
+
+        // Ensure subcategory belongs to selected category
+        if (!empty($validated['subcategory_id'])) {
+            $validSub = Subcategory::where('id', $validated['subcategory_id'])
+                ->where('category_id', $validated['category_id'])
+                ->exists();
+            if (!$validSub) {
+                $validated['subcategory_id'] = null;
+            }
         }
 
         $service->update($validated);

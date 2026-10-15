@@ -45,9 +45,19 @@
                             <div class="text-[11px] font-mono text-neutral-400">/service/{{ $serv->slug }}</div>
                         </td>
                         <td class="py-3.5 px-4">
-                            <span class="px-2 py-0.5 rounded text-[10px] bg-amber-500/10 text-amber-300 border border-amber-500/20 font-semibold">
-                                {{ $serv->category->name ?? 'Uncategorized' }}
-                            </span>
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <span class="px-1.5 py-0.5 rounded text-[9px] font-mono uppercase bg-amber-500/10 text-amber-300 border border-amber-500/20 font-bold">
+                                    {{ $serv->category->type ?? 'general' }}
+                                </span>
+                                <span class="text-white font-semibold text-xs">
+                                    {{ $serv->category->name ?? 'Uncategorized' }}
+                                </span>
+                            </div>
+                            @if($serv->subcategory)
+                            <div class="text-[11px] text-neutral-400 mt-0.5 flex items-center gap-1">
+                                <span class="text-amber-500/60">↳</span> {{ $serv->subcategory->name }}
+                            </div>
+                            @endif
                         </td>
                         <td class="py-3.5 px-4 text-neutral-300">
                             <div>{{ $serv->duration ?? '1 Day' }}</div>

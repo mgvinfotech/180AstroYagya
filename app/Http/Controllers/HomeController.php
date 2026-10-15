@@ -84,22 +84,12 @@ class HomeController extends Controller
         $astrologers = Astrologer::where('is_active', true)->orderBy('order_index')->get();
         
         $jyotishServices = Service::where('is_active', true)
-            ->where(function ($q) {
-                $q->whereHas('category', function ($cq) {
-                    $cq->where('slug', 'like', '%jyotish%')->orWhere('slug', 'like', '%kundli%')->orWhere('slug', 'like', '%astrology%');
-                })->orWhere('title', 'like', '%Horoscope%')
-                  ->orWhere('title', 'like', '%Kundli%')
-                  ->orWhere('title', 'like', '%Muhurta%')
-                  ->orWhere('title', 'like', '%Dosha%');
+            ->whereHas('category', function ($cq) {
+                $cq->where('type', 'jyotish');
             })
-            ->with('category')
+            ->with(['category', 'subcategory'])
             ->orderBy('order_index')
             ->get();
-
-        // Fallback: If category query has fewer than 4, include all services
-        if ($jyotishServices->count() < 3) {
-            $jyotishServices = Service::where('is_active', true)->take(6)->get();
-        }
 
         $faqs = Faq::where('is_active', true)
             ->where(function($q) {
@@ -121,17 +111,22 @@ class HomeController extends Controller
         $common = $this->getCommonData();
 
         $yagyas = Service::where('is_active', true)
+            ->whereHas('category', function ($q) {
+                $q->where('type', 'yagya');
+            })
             ->with(['category', 'subcategory'])
             ->orderBy('order_index')
             ->get();
 
         $yagyaCategories = Category::where('is_active', true)
+            ->where('type', 'yagya')
             ->with(['services' => function ($q) {
                 $q->where('is_active', true)->orderBy('order_index');
             }])
+            ->orderBy('order_index')
             ->get();
 
-        $astrologers = Astrologer::where('is_active', true)->get();
+        $astrologers = Astrologer::where('is_active', true)->orderBy('order_index')->get();
 
         return view('frontend.yagyas', array_merge($common, compact('yagyas', 'yagyaCategories', 'astrologers')));
     }

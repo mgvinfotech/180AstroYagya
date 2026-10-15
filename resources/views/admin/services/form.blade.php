@@ -36,24 +36,25 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
                 <label class="block text-xs font-semibold text-neutral-300 mb-1">Category *</label>
-                <select name="category_id" required class="form-input-admin">
+                <select name="category_id" id="categorySelect" required class="form-input-admin">
                     @foreach($categories as $cat)
-                    <option value="{{ $cat->id }}" {{ old('category_id', $service->category_id) == $cat->id ? 'selected' : '' }}>
-                        {{ $cat->name }} ({{ $cat->type }})
+                    <option value="{{ $cat->id }}" data-type="{{ $cat->type }}" {{ old('category_id', $service->category_id) == $cat->id ? 'selected' : '' }}>
+                        {{ $cat->name }} [{{ strtoupper($cat->type) }}]
                     </option>
                     @endforeach
                 </select>
             </div>
             <div>
                 <label class="block text-xs font-semibold text-neutral-300 mb-1">Subcategory (Optional)</label>
-                <select name="subcategory_id" class="form-input-admin">
+                <select name="subcategory_id" id="subcategorySelect" class="form-input-admin">
                     <option value="">-- None --</option>
                     @foreach($subcategories as $sub)
-                    <option value="{{ $sub->id }}" {{ old('subcategory_id', $service->subcategory_id) == $sub->id ? 'selected' : '' }}>
+                    <option value="{{ $sub->id }}" data-category-id="{{ $sub->category_id }}" {{ old('subcategory_id', $service->subcategory_id) == $sub->id ? 'selected' : '' }}>
                         {{ $sub->name }}
                     </option>
                     @endforeach
                 </select>
+                <p id="subcatHint" class="text-[10px] text-neutral-400 mt-1">Subcategories automatically filtered by selected Category.</p>
             </div>
         </div>
 
@@ -160,6 +161,63 @@
 </div>
 
 <script>
+    // Subcategory Dynamic Filtering based on Selected Category
+    function filterSubcategories() {
+        const catSelect = document.getElementById('categorySelect');
+        const subSelect = document.getElementById('subcategorySelect');
+        if (!catSelect || !subSelect) return;
+
+        const selectedCatId = String(catSelect.value);
+        let validMatchCount = 0;
+        let selectedOptionStillValid = false;
+
+        Array.from(subSelect.options).forEach((opt) => {
+            if (!opt.value) {
+                // Keep the '-- None --' placeholder option
+                opt.style.display = '';
+                opt.disabled = false;
+                return;
+            }
+
+            const optCatId = String(opt.getAttribute('data-category-id') || '');
+            if (optCatId === selectedCatId) {
+                opt.style.display = '';
+                opt.disabled = false;
+                validMatchCount++;
+                if (opt.selected) {
+                    selectedOptionStillValid = true;
+                }
+            } else {
+                opt.style.display = 'none';
+                opt.disabled = true;
+                if (opt.selected) {
+                    opt.selected = false;
+                }
+            }
+        });
+
+        // If previously selected subcategory does not belong to this category, reset to empty
+        if (!selectedOptionStillValid && subSelect.value && subSelect.selectedOptions[0]?.disabled) {
+            subSelect.value = '';
+        }
+
+        const hint = document.getElementById('subcatHint');
+        if (hint) {
+            hint.textContent = validMatchCount > 0 
+                ? `${validMatchCount} subcategor${validMatchCount > 1 ? 'ies' : 'y'} available for selected category.` 
+                : 'No subcategories created for this category yet.';
+        }
+    }
+
+    const catSelect = document.getElementById('categorySelect');
+    if (catSelect) {
+        catSelect.addEventListener('change', filterSubcategories);
+        document.addEventListener('DOMContentLoaded', filterSubcategories);
+        // Also call immediately
+        filterSubcategories();
+    }
+
+    // Image Upload Preview
     const serviceFileInput = document.getElementById('serviceImageFile');
     const servicePreviewImg = document.getElementById('servicePreviewImg');
     if (serviceFileInput && servicePreviewImg) {

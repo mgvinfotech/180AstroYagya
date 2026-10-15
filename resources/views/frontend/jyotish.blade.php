@@ -103,6 +103,7 @@
                     <img src="{{ $serv->image_url }}" alt="{{ $serv->title }}" class="group-hover:scale-105 transition-transform duration-500">
                     <span class="service-category-badge">
                         {{ $serv->category->name ?? 'Jyotish Vidya' }}
+                        @if($serv->subcategory) • {{ $serv->subcategory->name }} @endif
                     </span>
                 </div>
                 <div class="service-card-body flex flex-col justify-between">

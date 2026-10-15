@@ -160,7 +160,7 @@
                     <label class="block text-xs font-semibold text-neutral-300 mb-1">Parent Category *</label>
                     <select name="category_id" required class="form-input-admin">
                         @foreach($categories as $cat)
-                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                        <option value="{{ $cat->id }}">{{ $cat->name }} [{{ strtoupper($cat->type) }}]</option>
                         @endforeach
                     </select>
                 </div>
