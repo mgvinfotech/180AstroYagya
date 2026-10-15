@@ -43,29 +43,6 @@ Manage 100% of the portal without touching code:
 
 ---
 
-## 🗄️ Database & phpMyAdmin Details
 
-- **MySQL Database Name**: `astroyagya_master_db`
-- **Ready-to-Import SQL Dump**: [`astroyagya_master_db.sql`](file:///d:/MGV%20project/Astro/astroyagya_master_db.sql) (105 KB, complete with all tables, default admin, and full Vedic sample data)
-- **Database Driver**: MySQL / MariaDB (UTF8mb4 Unicode)
 
 ---
-
-## 🔐 Default Admin Sanctuary Credentials
-
-- **Admin Login URL**: `http://127.0.0.1:8000/admin/login`
-- **Email**: `admin@astroyagya.com`
-- **Password**: `admin123`
-
----
-
-## 🚀 How to Run Locally
-
-1. **Start MySQL in XAMPP**: Ensure Apache and MySQL are running in your XAMPP Control Panel.
-2. **Start the Laravel Server**:
-   ```bash
-   php artisan serve
-   ```
-3. **Open in Browser**:
-   - Frontend Portal: [http://127.0.0.1:8000](http://127.0.0.1:8000)
-   - Admin Sanctuary: [http://127.0.0.1:8000/admin/login](http://127.0.0.1:8000/admin/login)
