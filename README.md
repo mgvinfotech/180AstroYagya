@@ -6,7 +6,7 @@ A high-end, luxury Vedic Astrology & Sacred Yagya web application built with **L
 
 ## 🌟 Key Highlights & Features
 
-### 1. Ultra-Luxury Vedic Frontend ("लाखों रुपये का प्रीमियम लुक")
+### 1.  Vedic Frontend
 - **Color Palette & Visuals**: Sacred Temple Mahogany (`#170709`), Mystic Obsidian (`#070203`), Radiant Vedic Gold (`#D4AF37`, `#FFD700`), and Royal Vermillion.
 - **Micro-Animations & Sacred Aura**:
   - Interactive canvas with floating golden sacred havan smoke particles and celestial halos.
